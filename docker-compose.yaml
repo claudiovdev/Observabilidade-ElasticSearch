@@ -73,6 +73,21 @@ services:
     depends_on:
       - kibana
 
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.13.0
+    command: filebeat -e -strict.perms=false
+    container_name: filebeat
+    user: root
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./beats/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - logs-app:/var/log
+    restart: on-failure
+    networks:
+      - observability
+    depends_on:
+      - kibana
+
   mysql:
     image: mysql
     networks:
@@ -88,3 +103,10 @@ services:
 networks:
   observability:
     driver: bridge
+
+volumes:
+  logs-app:   # Garantindo que o volume logs-app está definido
+    external: true   # Indica que este volume já existe no Docker
+
+
+# Comando para rodar aplicação docker run -v logs-app:/logs -p 8080:8080 --network observabilidade_observability app-java -d
