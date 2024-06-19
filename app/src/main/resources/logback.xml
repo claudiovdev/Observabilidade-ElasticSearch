@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Inclui as configurações padrão do Spring Boot para Logback -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <!-- Define a localização do arquivo de log -->
+    <property name="LOG_FILE" value="logs/spring-boot-application.log"/>
+
+    <!-- Define um appender para o arquivo de log com rotação diária -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Define o padrão de nome para os arquivos de log rotacionados -->
+            <fileNamePattern>logs/spring-boot-application.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- Mantém 30 dias de histórico de logs -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Configura o nível de log para INFO e define os appenders -->
+    <root level="INFO">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>
